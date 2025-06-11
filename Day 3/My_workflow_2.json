@@ -1,0 +1,257 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1kRK_owYV8IMB1YaNSjNr2mmM6ZeV0LmAZ08snkN-mnY",
+          "mode": "list",
+          "cachedResultName": "Report Content",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRK_owYV8IMB1YaNSjNr2mmM6ZeV0LmAZ08snkN-mnY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kRK_owYV8IMB1YaNSjNr2mmM6ZeV0LmAZ08snkN-mnY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json['Enter the name'] }}",
+            "Email": "={{ $json['Email id '] }}",
+            "Topics Disccused on": "={{ $json['Topics Disccused on'] }}",
+            "Disscused Points": "={{ $json['Disscused Points'] }}",
+            "Deadline": "={{ $json.Deadline }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topics Disccused on",
+              "displayName": "Topics Disccused on",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Disscused Points",
+              "displayName": "Disscused Points",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Deadline",
+              "displayName": "Deadline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "ea375039-678d-47fb-97f9-97521082779b",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fo1RnxVTP9EpcS2u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=we have conducted a meeting the candidate has shared the topic we disscused on and the disscused point , now i want you to analyse it and generate the action items to be excuted , i want it as email \n\nthis is the data :  {{ $json.Name }} ,{{ $json['Topics Disccused on'] }} ,{{ $json['Disscused Points'] }} ,{{ $json.Deadline }}\n\njust provide the email content without any subject, make it brief, avoid including the stars symbol in the content",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "d54d376a-6721-49aa-976c-c72110b6e616",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        480,
+        220
+      ],
+      "id": "cc5c848c-f87c-4854-8db1-34c350e7b95f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "N6zvtyij0UN0GCW8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json.Email }}",
+        "subject": "Regarding the task Completion",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        20
+      ],
+      "id": "911a6867-071f-4530-b4f9-d76e471a1bd6",
+      "name": "Gmail",
+      "webhookId": "fbf5a4b2-875b-41d6-bb3b-eacec9bc739a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BeULXI8kiiqQ083s",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Report ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Enter the name"
+            },
+            {
+              "fieldLabel": "Topics Disccused on"
+            },
+            {
+              "fieldLabel": "Disscused Points"
+            },
+            {
+              "fieldLabel": "Deadline",
+              "fieldType": "date"
+            },
+            {
+              "fieldLabel": "Email id "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -20,
+        0
+      ],
+      "id": "07e79e4c-61fc-4eee-859e-30c55289099d",
+      "name": "On form submission",
+      "webhookId": "7e6e8ba5-28cd-448e-aa92-0f0e074ebe80"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "10dea84e-89e6-4979-9151-e3b16a8ee866",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d511aeb7979b54d166f4338131d0f730d79ac8b1c51c6d4df048eb97584e935f"
+  },
+  "id": "DY6hBvVdbMyHZRuL",
+  "tags": []
+}
