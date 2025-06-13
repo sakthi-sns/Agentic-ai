@@ -1,0 +1,266 @@
+{
+  "name": "Birthday wishes",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3e603122-97e2-4206-9219-3f91029a7e8a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Brn3fARY0aA5rR-6OlAa8o5LMKcxNhLp_FqSjkVkxG4",
+          "mode": "list",
+          "cachedResultName": "Birthday wishes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Brn3fARY0aA5rR-6OlAa8o5LMKcxNhLp_FqSjkVkxG4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Brn3fARY0aA5rR-6OlAa8o5LMKcxNhLp_FqSjkVkxG4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "487a376e-0637-45ed-9c47-af6581d8156a",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fo1RnxVTP9EpcS2u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\nconst yyyyMmDd = today.toISOString().slice(0, 10);  // format: YYYY-MM-DD\nconst mmdd = (today.getMonth() + 1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');\n\nconst matches = [];\nfor (const item of items) {\n  let birthdayMatch = false;\n  let anniversaryMatch = false;\n\n  if (item.json.Birthday) {\n    const bday = item.json.Birthday.slice(5, 10);\n    if (bday === mmdd) birthdayMatch = true;\n  }\n\n  if (item.json.WorkAnniversary) {\n    const anniv = item.json.WorkAnniversary.slice(5, 10);\n    if (anniv === mmdd) anniversaryMatch = true;\n  }\n\n  if (birthdayMatch || anniversaryMatch) {\n    matches.push({\n      json: {\n        ...item.json,\n        birthdayMatch,\n        anniversaryMatch,\n        today: yyyyMmDd\n      }\n    });\n  }\n}\n\nreturn matches;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "fe7aca80-3cef-4983-80d4-0f29a76205bd",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "273442fa-4f1d-4719-a308-10b1c1084faa",
+              "leftValue": "={{ $('Code').item.json.Birthday }}",
+              "rightValue": "={{ $json.today }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        860,
+        0
+      ],
+      "id": "5964b5fe-5fdd-47fc-8b49-7874def02ee9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email'] }}",
+        "subject": "Birthday Wishes from Sakthi",
+        "message": "=Hi {{ $json[\"Name\"] }}! 🎂 Happy Birthday! Have an amazing day!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        -20
+      ],
+      "id": "82548a6a-2a1d-4cab-813f-702f235ca3a2",
+      "name": "Gmail",
+      "webhookId": "5e9731bc-96b1-415b-94f0-bca8745cb94a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BeULXI8kiiqQ083s",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f598adea-c4f2-4452-9b24-482ada930e4e",
+              "leftValue": "={{ $json.WorkAnniversay }}",
+              "rightValue": "={{ $json.today }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        860,
+        180
+      ],
+      "id": "ef9cce83-0459-45f6-bc4d-8fe37c9a7d9a",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Code').item.json.Email }}",
+        "subject": "Anniversary Wishes",
+        "emailType": "text",
+        "message": "=Hi {{ $json.Name }} ! 🎉 Congrats on your work anniversary! Keep rocking!\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        160
+      ],
+      "id": "36bb6f6e-3c24-4e0a-a391-e1588c3a6372",
+      "name": "Gmail1",
+      "webhookId": "560f224f-ecaf-4f74-b54a-ec31c4e4e6f4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BeULXI8kiiqQ083s",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Gmail": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "186d2426-a861-4af8-9f8e-3855d9e6b2c3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d511aeb7979b54d166f4338131d0f730d79ac8b1c51c6d4df048eb97584e935f"
+  },
+  "id": "VHtPsEDh95bxeZ7i",
+  "tags": []
+}
