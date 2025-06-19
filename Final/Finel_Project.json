@@ -1,388 +1,38 @@
 {
-  "name": "Finel Project",
+  "name": "Calendar Trigger",
   "nodes": [
     {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "calendarId": {
-          "__rl": true,
-          "value": "c668214908a80f81a4b7214e6441e87b42b8eb92e54b556127091d931ca5c738@group.calendar.google.com",
-          "mode": "list",
-          "cachedResultName": "Guest Birthday"
-        },
-        "triggerOn": "eventCreated",
-        "options": {
-          "matchTerm": ""
-        }
-      },
-      "type": "n8n-nodes-base.googleCalendarTrigger",
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -220,
+        -560,
         -140
       ],
-      "id": "085c59c2-cfff-4709-9c22-81025f139122",
-      "name": "Google Calendar Trigger",
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "8PHNMP7tq5uUHu7d",
-          "name": "Google Calendar account"
-        }
-      }
+      "id": "b65ee2d3-ca5f-4dfa-9580-0ed8b3427347",
+      "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "4b387a8e-fcfb-4d6b-a85e-e39152f164ba",
-              "leftValue": "={{ $json.start.dateTime }}",
-              "rightValue": "={{ $now.format(\"YYYY-MM-DD\") }}",
-              "operator": {
-                "type": "dateTime",
-                "operation": "equals"
-              }
-            },
-            {
-              "id": "a865b009-e700-48bf-a66b-4d3973f85205",
-              "leftValue": "",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
-            {
-              "id": "dcac3fc0-0f4e-4c4c-93dd-d1960558cb31",
-              "leftValue": "",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "or"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -40,
-        80
-      ],
-      "id": "453e4bac-0292-429b-a476-73a2c8172d16",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=“Write a warm welcome message for {{ $json.summary }} visiting today at SNS.”",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        180,
-        60
-      ],
-      "id": "db839dd2-8c67-4726-8fdc-5f86fa8f3ab9",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "modelName": "models/gemini-2.0-flash",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        540,
-        200
-      ],
-      "id": "c5d19644-7d7e-4e79-97e8-77b5f8e017b6",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "VAPHa9OefCSf92SO",
-          "name": "Google Gemini(PaLM) Api account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sendTo": "={{ $('Google Calendar Trigger1').item.json.attendees[0]['email']}}",
-        "subject": "Welcome To SNS!!",
-        "emailType": "text",
-        "message": "={{ $json.output }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        540,
-        60
-      ],
-      "id": "85a9fc00-78cd-4821-b88c-1af116f3ae38",
-      "name": "Gmail",
-      "webhookId": "b6269390-c922-496d-91a2-eafe51d4d2b9",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "BeULXI8kiiqQ083s",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Dear Sir, for your kind reminder\n {{ $json.summary }} is visitng our campus on {{ $json.sevenDaysAfter }}",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        380,
-        300
-      ],
-      "id": "58f4e1e0-d1d6-45c4-9793-d7f6dc7d3cc8",
-      "name": "AI Agent1"
-    },
-    {
-      "parameters": {
-        "modelName": "models/gemini-2.0-flash",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        400,
-        600
-      ],
-      "id": "f2b57878-a1ea-429f-b7aa-1b26eb5e782c",
-      "name": "Google Gemini Chat Model1",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "VAPHa9OefCSf92SO",
-          "name": "Google Gemini(PaLM) Api account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sendTo": "Sakthirithu171113@gmail.com",
-        "subject": "Guest Visit Reminder",
-        "emailType": "text",
-        "message": "={{ $json.output }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        960,
-        280
-      ],
-      "id": "6d9f71ed-9e47-4f48-9ef1-a17fef0b6a0c",
-      "name": "Gmail1",
-      "webhookId": "f5647bb4-ea11-4fcb-a606-9fcb21c48b15",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "BeULXI8kiiqQ083s",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all();\nconst updatedItems = items.map((item) => {\n  return {\n    summary: item?.json?.summary,\n    startDate: item?.json?.start.date,\n  };\n});\nreturn updatedItems;\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -40,
-        -140
-      ],
-      "id": "abd2e7ec-0d83-46cd-8fac-1eaff6a94c8b",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "value": "1QTjHcIcIZL8DO5oqAz2XfiAHun6rs6TKuzsAQGIdjC8",
-          "mode": "list",
-          "cachedResultName": "Record the Birthdate",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QTjHcIcIZL8DO5oqAz2XfiAHun6rs6TKuzsAQGIdjC8/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1QTjHcIcIZL8DO5oqAz2XfiAHun6rs6TKuzsAQGIdjC8/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [
-            "summary"
-          ],
-          "schema": [
-            {
-              "id": "summary",
-              "displayName": "summary",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "startDate",
-              "displayName": "startDate",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        200,
-        -140
-      ],
-      "id": "612f06fc-d11e-4545-8f7a-d70e2e8b9724",
-      "name": "Google Sheets",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "fo1RnxVTP9EpcS2u",
-          "name": "Google Sheets account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Write a friendly birthday email for {{ $json[\"$json.summary\"] }} who visited SNS Institutions in the past.",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        720,
-        -160
-      ],
-      "id": "65f6bc1a-f782-437b-a919-b1d475b6c674",
-      "name": "AI Agent2"
-    },
-    {
-      "parameters": {
-        "modelName": "models/gemini-2.0-flash",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        740,
-        -20
-      ],
-      "id": "22e6c81e-848c-4d79-b4cc-db3da3f0f7a4",
-      "name": "Google Gemini Chat Model2",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "VAPHa9OefCSf92SO",
-          "name": "Google Gemini(PaLM) Api account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "calendarId": {
+        "operation": "getAll",
+        "calendar": {
           "__rl": true,
           "value": "family14674809639249022051@group.calendar.google.com",
           "mode": "list",
           "cachedResultName": "Guest Visit"
         },
-        "triggerOn": "eventCreated",
-        "options": {
-          "matchTerm": ""
-        }
+        "limit": 200,
+        "timeMax": "={{ $now.plus({ week: 52}) }}",
+        "options": {}
       },
-      "type": "n8n-nodes-base.googleCalendarTrigger",
-      "typeVersion": 1,
-      "position": [
-        -240,
-        80
-      ],
-      "id": "353c2f3a-4d4d-4037-bf09-55334348c2a0",
-      "name": "Google Calendar Trigger1",
-      "credentials": {
-        "googleCalendarOAuth2Api": {
-          "id": "8PHNMP7tq5uUHu7d",
-          "name": "Google Calendar account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "calendarId": {
-          "__rl": true,
-          "value": "family14674809639249022051@group.calendar.google.com",
-          "mode": "list",
-          "cachedResultName": "Guest Visit"
-        },
-        "triggerOn": "eventCreated",
-        "options": {
-          "matchTerm": ""
-        }
-      },
-      "type": "n8n-nodes-base.googleCalendarTrigger",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
       "position": [
         -220,
-        300
+        -140
       ],
-      "id": "67c87c21-b77b-4b33-82e2-0c0bb98c2e03",
-      "name": "Google Calendar Trigger2",
+      "id": "ad4da400-4d96-4f1a-a1d1-bf35c36c0c81",
+      "name": "Google Calendar",
       "credentials": {
         "googleCalendarOAuth2Api": {
           "id": "8PHNMP7tq5uUHu7d",
@@ -402,22 +52,11 @@
           "conditions": [
             {
               "id": "966d438a-1b6b-43c0-a5ad-c4f2aea073e0",
-              "leftValue": "={{ $('Google Calendar Trigger').item.json.start.date }}",
-              "rightValue": "={{ $json.today }}",
+              "leftValue": "={{ $json[\"Birthdate\"].substring(5,10) }}",
+              "rightValue": "={{ $now.format('MM-dd') }}",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            },
-            {
-              "id": "b56fa5b9-1cd6-461f-978d-81406b8d9154",
-              "leftValue": "",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "equals"
               }
             }
           ],
@@ -428,29 +67,51 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        480,
+        300,
         -140
       ],
-      "id": "e8ffaa8c-3ee2-4d09-8f37-db9a1c1d3f56",
+      "id": "2b3627ab-6e8d-4f48-a9f3-39495b51bb4f",
       "name": "If2"
     },
     {
       "parameters": {
-        "sendTo": "={{ $('Google Calendar Trigger').item.json.attendees[0].email }}",
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        460,
+        20
+      ],
+      "id": "4099480c-1345-44f6-94fa-65ef957b9143",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VAPHa9OefCSf92SO",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Calendar').item.json.attendees[0].email }}",
         "subject": "Birthday Wishes",
         "emailType": "text",
         "message": "={{ $json.output }}",
-        "options": {}
+        "options": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1060,
+        940,
         -160
       ],
-      "id": "6e8295dd-27e8-4d1e-a47c-81734097c5a3",
-      "name": "Gmail2",
-      "webhookId": "c2662035-1a5f-457d-88e5-247fa074be62",
+      "id": "b05f63cf-dbc9-47e8-ba43-a15bab33946d",
+      "name": "Gmail1",
+      "webhookId": "d3e68d90-c07d-4410-a82a-5c68d23f19ff",
       "credentials": {
         "gmailOAuth2": {
           "id": "BeULXI8kiiqQ083s",
@@ -460,23 +121,447 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all().map((item) => item.json);\n\nconst updatedItems = items.map((item) => {\n  const startDate = new Date(item.start.dateTime);\n  const sevenDaysAfter = new Date(startDate);\n  sevenDaysAfter.setDate(startDate.getDate() + 7);\n\n  return {\n    summary: item.summary,\n    sevenDaysAfter: sevenDaysAfter.toISOString(),\n  };\n});\n\nreturn updatedItems;\n"
+        "sendTo": "={{ $('Google Calendar').item.json.attendees[0].email }}",
+        "subject": "Welcome To SNS!!",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        140
+      ],
+      "id": "d68d47bd-7431-49ec-8b76-2ce84e644e9a",
+      "name": "Gmail",
+      "webhookId": "b6269390-c922-496d-91a2-eafe51d4d2b9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BeULXI8kiiqQ083s",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        340
+      ],
+      "id": "fbcd145e-f47e-485e-8472-e6c1b390cf44",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VAPHa9OefCSf92SO",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=ero.cgc@snsgroups.com",
+        "subject": "Reminder Message",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1020,
+        540
+      ],
+      "id": "dc781c68-5fb2-4423-b9fb-591f9ea20b35",
+      "name": "Gmail2",
+      "webhookId": "4a3d726b-9e7a-4fdb-b666-0552df710079",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "BeULXI8kiiqQ083s",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        1140
+      ],
+      "id": "7823540d-51c8-4a50-bc53-68ce9a54a58e",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VAPHa9OefCSf92SO",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4b387a8e-fcfb-4d6b-a85e-e39152f164ba",
+              "leftValue": "={{ $json['Visiting Date'] }}",
+              "rightValue": "= {{ $now.format('yyyy-MM-dd') }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        160
+      ],
+      "id": "f9ade09f-a49a-4bcd-82a6-e1ae6d1f00e4",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a friendly birthday email {{ $json.Name }} for who visited SNS Institutions on {{ $json['Visiting Date'] }} \nRegards \nSakthi K\nERO \n\navoid subject\nSNS Groups",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -160
+      ],
+      "id": "a1e224c8-cf72-4a3b-8180-b8d88140b033",
+      "name": "Birthday Wish"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=write a warm welcome message to {{ $json.Name }} for visiting SNS Campus\nRegards\nSNS Team\navoid subject",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        560,
+        140
+      ],
+      "id": "88a714f8-8c98-4f8c-a545-1c1da1cd1e27",
+      "name": "Welcome Message"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "10iqdEp7eTHjpq2DdcqlhY4Flx51I9YPzMcA_eE1ctCk",
+          "mode": "list",
+          "cachedResultName": "Guest Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10iqdEp7eTHjpq2DdcqlhY4Flx51I9YPzMcA_eE1ctCk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10iqdEp7eTHjpq2DdcqlhY4Flx51I9YPzMcA_eE1ctCk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.summary }}",
+            "Birthdate": "={{ $json.description }}",
+            "Visiting Date": "={{ $json.start.date }}",
+            "Email": "={{ $json.attendees[0].email }}",
+            "location": "={{ $json.location }}"
+          },
+          "matchingColumns": [
+            "Name"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Birthdate",
+              "displayName": "Birthdate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Visiting Date",
+              "displayName": "Visiting Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -20,
+        -140
+      ],
+      "id": "ccb46b65-54d9-485e-891a-3b612c630ae9",
+      "name": "Guests Record",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fo1RnxVTP9EpcS2u",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// Get today's date at midnight (00:00:00) to avoid time zone offset issues\nconst today = new Date();\ntoday.setHours(0, 0, 0, 0); // Optional: normalize time\n\nconst updatedItems = items.map((item) => {\n  const visitingDate = new Date(item.json[\"Visiting Date\"]);\n  visitingDate.setHours(0, 0, 0, 0); // Normalize visiting date too\n\n  const diffTime = visitingDate - today;\n  const diffDays = diffTime / (1000 * 60 * 60 * 24); // No need for Math.abs\n\n  return {\n    json: {\n      ...item.json,\n      isOneWeekOld: diffDays === 7,\n      visitingDate: item.json[\"Visiting Date\"],\n    }\n  };\n});\n\nreturn updatedItems;\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        80,
-        300
+        -180,
+        460
       ],
-      "id": "a8c0279e-4c46-4496-888e-2e61f5c7b831",
-      "name": "Code1"
+      "id": "b43d25ce-1fa4-4ac8-ae18-cd5f1d547901",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6100cf16-f2c4-4467-b14a-999f33266977",
+              "leftValue": "={{ $json['isOneWeekOld'] }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        280,
+        580
+      ],
+      "id": "d63fe29a-4ffc-44b2-94ad-15419725866e",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate a reminder mail to Director about the guest visit in the upcoming week at SNS\n\nthis is the info \nname : {{ $json.Name }}\nvisiting date : {{ $json['Visiting Date'] }}\nlocation : {{ $json.location }}\n\njust return the content without subject or best regards",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        560,
+        560
+      ],
+      "id": "870d0e91-bc9d-4bac-958a-01fee920c085",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        380,
+        760
+      ],
+      "id": "41dd7297-da07-4618-bac4-6e918d57b897",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VAPHa9OefCSf92SO",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
     }
   ],
   "pinData": {},
   "connections": {
-    "Google Calendar Trigger": {
+    "When clicking ‘Execute workflow’": {
       "main": [
         [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Guests Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Birthday Wish",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Birthday Wish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Welcome Message",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Welcome Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Birthday Wish": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Welcome Message": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guests Record": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Code",
             "type": "main",
@@ -485,7 +570,18 @@
         ]
       ]
     },
-    "If": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
       "main": [
         [
           {
@@ -493,11 +589,10 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
-    "Google Gemini Chat Model": {
+    "Google Gemini Chat Model3": {
       "ai_languageModel": [
         [
           {
@@ -512,117 +607,7 @@
       "main": [
         [
           {
-            "node": "Gmail",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent1": {
-      "main": [
-        [
-          {
-            "node": "Gmail1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Google Sheets",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Sheets": {
-      "main": [
-        [
-          {
-            "node": "If2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model2": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent2",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Calendar Trigger1": {
-      "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Calendar Trigger2": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If2": {
-      "main": [
-        [
-          {
-            "node": "AI Agent2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent2": {
-      "main": [
-        [
-          {
             "node": "Gmail2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code1": {
-      "main": [
-        [
-          {
-            "node": "AI Agent1",
             "type": "main",
             "index": 0
           }
@@ -634,11 +619,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e7b21b59-5ea8-4d41-9212-1a75e43ce725",
+  "versionId": "da35e409-8ea5-4fe2-a5c6-49f641964139",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d511aeb7979b54d166f4338131d0f730d79ac8b1c51c6d4df048eb97584e935f"
   },
-  "id": "BVswysOxARExWXzh",
+  "id": "Ex8f2rCnsUtNzZiF",
   "tags": []
 }
